@@ -1,0 +1,34 @@
+version: '3.8'
+
+networks:                             # TẠO NETWORK
+  my-network:
+    driver: bridge
+
+volumes:                              # TẠO Ổ ĐĨA
+  data-folder:                  
+    driver_opts:
+      device: ${PWD}/db                
+      o: bind
+      type: none
+
+services:
+  jerry-mysql:
+    image: mysql:latest
+    container_name: foody-mysql
+    hostname: mysql01
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes: 
+      - data-folder:/var/lib/mysql 
+
+    networks:
+      - my-network
+
+    ports:
+      - 3306:3306
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: foodyDelivery
+      MYSQL_USER: jerry
+      MYSQL_PASSWORD: 123
